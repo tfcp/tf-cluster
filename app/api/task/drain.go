@@ -1,0 +1,42 @@
+package task
+
+import (
+	"github.com/gin-gonic/gin"
+	"tf-cluster/library/code"
+	"tf-cluster/library/utils"
+)
+
+type RequestNodeDrainHandel struct {
+	Name string `json:"name" form:"name" valid:"name      @required#name不能为空"`
+	Ip   string `json:"ip" form:"ip" valid:"ip      @required#ip不能为空"`
+}
+
+func NodeDrainHandleApi(c *gin.Context) {
+	res := map[string]interface{}{
+		"result": "",
+	}
+
+	utils.Response(c, code.ErrSuccess, res)
+}
+
+type RequestNodeDrainConfig struct {
+}
+
+func NodeDrainConfigApi(c *gin.Context) {
+	res := map[string]interface{}{
+		"result": "",
+	}
+
+	utils.Response(c, code.ErrSuccess, res)
+}
+
+type RequestNodeDrainConfigEdit struct {
+}
+
+func NodeDrainConfigEditApi(c *gin.Context) {
+	res := map[string]interface{}{
+		"result": "",
+	}
+
+	utils.Response(c, code.ErrSuccess, res)
+}

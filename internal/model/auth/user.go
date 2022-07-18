@@ -1,31 +1,27 @@
-package demo
+package auth
 
 import (
-	"fmt"
-	"tf-cluster/internal/model"
-	"github.com/gogf/gf/frame/g"
 	"github.com/jinzhu/gorm"
+	"tf-cluster/internal/model"
 )
 
 // gorm文档: https://www.tizi365.com/archives/22.html
 
 type User struct {
 	*model.Model
-	Name         string `json:"name"`
-	Age          int    `json:"age"`
-	Sex          int    `json:"sex"`
+	Name         string `gorm:"column:username" json:"username"`
 	Status       int    `json:"status"`
 	Role         int    `json:"role"`
-	Pwd          string `json:"pwd"`
+	Pwd          string `gorm:"column:password" json:"password"`
 	Avatar       string `json:"avatar"`
 	Introduction string `json:"introduction"`
 }
 
-func (this *User) TableName() string{
-	// 静态表名 动态表名走db.Table
-	tableName := "user"
-	return fmt.Sprintf("%s%s",g.Config().GetString("database.demo.prefix"),tableName)
-}
+//func (this *User) TableName() string{
+//	// 静态表名(强制覆盖)
+//	tableName := "user"
+//	return fmt.Sprintf("%s%s",g.Config().GetString("database.auth.prefix"),tableName)
+//}
 
 func (this *User) ListUser(where map[string]interface{}, page, size int) ([]*User, error) {
 	var users []*User

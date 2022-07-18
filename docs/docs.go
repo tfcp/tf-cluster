@@ -16,7 +16,7 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/demo/hello-info": {
+        "/auth/hello-info": {
             "get": {
                 "tags": [
                     "示例"
@@ -41,7 +41,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/demo/user-list": {
+        "/auth/user-list": {
             "get": {
                 "tags": [
                     "示例"

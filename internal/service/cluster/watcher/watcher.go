@@ -17,14 +17,14 @@ func NewClusters() *Clusters {
 }
 
 func (this *Clusters) Listen() {
-	//bootstrap()
+	bootstrap()
 	for _, watcher := range this.watcherList {
 		go watcher.Run()
 	}
 }
 
 func (this *Clusters) Add(watch ...Watcher) {
-	if len(watch) > 0{
+	if len(watch) > 0 {
 		this.watcherList = append(this.watcherList, watch...)
 	}
 }

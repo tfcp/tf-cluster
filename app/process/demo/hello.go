@@ -8,13 +8,13 @@ import (
 func HelloProcess() {
 	for {
 		time.Sleep(1 * time.Second)
-		fmt.Println("this is demo-hello process")
+		fmt.Println("this is auth-hello process")
 	}
 }
 
 func TestProcess() {
 	for {
 		time.Sleep(1 * time.Second)
-		fmt.Println("this is demo-test process")
+		fmt.Println("this is auth-test process")
 	}
 }

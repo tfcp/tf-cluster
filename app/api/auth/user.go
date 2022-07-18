@@ -1,9 +1,9 @@
-package demo
+package auth
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogf/gf/util/gvalid"
-	"tf-cluster/internal/service/demo"
+	"tf-cluster/internal/service/auth"
 	"tf-cluster/library/code"
 	"tf-cluster/library/utils"
 )
@@ -22,7 +22,7 @@ type RequestUserList struct {
 // @Param page query string true "page " required
 // @Param page_size query string true "page_size " required
 // @Success 200 {object} utils.Res
-// @Router /demo/user-list [get]
+// @Router /auth/user-list [get]
 func UserListApi(c *gin.Context) {
 	var reqUserList RequestUserList
 	c.Bind(&reqUserList)
@@ -30,7 +30,7 @@ func UserListApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := demo.NewUserService()
+	hs := auth.NewUserService()
 	whereCondition := map[string]interface{}{}
 	if reqUserList.Name != "" {
 		whereCondition["name"] = reqUserList.Name
@@ -61,7 +61,7 @@ func UserCountApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := demo.NewUserService()
+	hs := auth.NewUserService()
 	whereCondition := map[string]interface{}{}
 	if reqUserCount.Name != "" {
 		whereCondition["name"] = reqUserCount.Name
@@ -91,7 +91,7 @@ func UserDetailApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := demo.NewUserService()
+	hs := auth.NewUserService()
 	whereCondition := map[string]interface{}{}
 	whereCondition["id"] = reqUserDetail.Id
 	userDetail, err := hs.One(whereCondition)
@@ -116,7 +116,7 @@ func UserDeleteApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := demo.NewUserService()
+	hs := auth.NewUserService()
 	err := hs.Delete(reqUserDelete.Id)
 	if err != nil {
 		utils.Response(c, code.ErrSystem, err.Error())
@@ -137,7 +137,7 @@ func UserChangeStatusApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := demo.NewUserService()
+	hs := auth.NewUserService()
 	err := hs.ChangeStatus(reqUserChange.Id, reqUserChange.Status)
 	if err != nil {
 		utils.Response(c, code.ErrSystem, err.Error())
@@ -164,12 +164,10 @@ func UserSaveApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := demo.NewUserService()
+	hs := auth.NewUserService()
 	err := hs.Save(reqUserSave.Id,
 		reqUserSave.Status,
 		reqUserSave.Role,
-		reqUserSave.Sex,
-		reqUserSave.Age,
 		reqUserSave.Name,
 		reqUserSave.Avatar,
 		reqUserSave.Introduction)

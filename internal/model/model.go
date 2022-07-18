@@ -10,7 +10,7 @@ import (
 )
 
 var (
-	Db *gorm.DB
+	Db     *gorm.DB
 	DbTest *gorm.DB
 )
 
@@ -44,33 +44,33 @@ func (this *Model) FilterBlankForm() *Model {
 
 func Setup() error {
 	var err error
-	Db, err = setDb(Db, "demo")
+	Db, err = setDb(Db, "tf")
 	if err != nil {
 		return errors.New(fmt.Sprintf("models.Setup err: %v", err))
 	}
-	DbTest, err = setDb(DbTest, "test")
-	if err != nil {
-		return errors.New(fmt.Sprintf("models.TestSetup err: %v", err))
-	}
+	//DbTest, err = setDb(DbTest, "test")
+	//if err != nil {
+	//	return errors.New(fmt.Sprintf("models.TestSetup err: %v", err))
+	//}
 	return nil
 }
 
 func setDb(db *gorm.DB, dbName string) (*gorm.DB, error) {
 	var err error
-	db, err = gorm.Open(g.Config().GetString("database."+dbName+".type"), fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	db, err = gorm.Open(g.Config().GetString("database."+dbName+".type"), fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local",
 		g.Config().GetString("database."+dbName+".user"),
 		g.Config().GetString("database."+dbName+".pass"),
 		g.Config().GetString("database."+dbName+".host"),
+		g.Config().GetString("database."+dbName+".port"),
 		g.Config().GetString("database."+dbName+".name")))
 	if err != nil {
 		return nil, err
 	}
-	db.LogMode(g.Config().GetBool("database." + dbName + ".log"))
-	// 多数据库不能用这个属性
-	//gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
-	//	//return g.Config().GetString("database."+dbName+".prefix") + defaultTableName
-	//	return g.Config().GetString("database.prefix") + defaultTableName
-	//}
+	db.LogMode(g.Config().GetBool("database."+dbName+".logMode", false))
+	// (如果有多数据库不能用这个属性)
+	gorm.DefaultTableNameHandler = func(db *gorm.DB, defaultTableName string) string {
+		return g.Config().GetString("database.prefix") + defaultTableName
+	}
 
 	db.SingularTable(true)
 	db.DB().SetMaxIdleConns(10)
@@ -84,10 +84,10 @@ func setDb(db *gorm.DB, dbName string) (*gorm.DB, error) {
 }
 
 // 注册新建钩子在持久化之前
-func updateTimeStampForCreateCallback(scope *gorm.Scope) {
+func createTimeStampForCreateCallback(scope *gorm.Scope) {
 	if !scope.HasError() {
 		nowTime := time.Now().Format("2006-01-01 03:04:00")
-		if createTimeField, ok := scope.FieldByName("CreateAt"); ok {
+		if createTimeField, ok := scope.FieldByName("create_at"); ok {
 			if createTimeField.IsBlank {
 				createTimeField.Set(nowTime)
 			}

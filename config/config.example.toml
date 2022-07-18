@@ -16,13 +16,13 @@
     format  =   "{Y-m-d}.log"
 
 [database]
-    [database.demo]
+    prefix      = "tf_"
+    [database.tf]
         host        = "127.0.0.1"
         port        = "3306"
-        prefix      = ""
         user        = "root"
         pass        = "root"
-        name        = "demo"
+        name        = "tf"
         type        = "mysql"
         tabel       = "hello"
     [database.test]

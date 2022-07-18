@@ -16,7 +16,7 @@ func Process() {
 	clusterStdout := watcher.ProcessCluster()
 	processStdoutContents = append(processStdoutContents, clusterStdout...)
 
-	//demoStdout := demo.ProcessDemo()
+	//demoStdout := auth.ProcessDemo()
 	//processStdoutContents = append(processStdoutContents, demoStdout...)
 
 	// stdout cron list

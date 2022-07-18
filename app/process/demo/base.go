@@ -3,7 +3,7 @@ package demo
 import "time"
 
 func ProcessDemo() [][]string {
-	// demo
+	// auth
 	go HelloProcess()
 	go TestProcess()
 

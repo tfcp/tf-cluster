@@ -49,7 +49,7 @@
 </template>
 
 <script>
-import { getDetail, enable, disable , save} from '@/api/demo'
+import { getDetail, enable, disable , save} from '@/api/auth'
 
 export default {
   data() {

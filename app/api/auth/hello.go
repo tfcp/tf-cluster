@@ -1,11 +1,11 @@
-package demo
+package auth
 
 import (
-	"tf-cluster/internal/service/demo"
-	"tf-cluster/library/code"
-	"tf-cluster/library/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gogf/gf/util/gvalid"
+	"tf-cluster/internal/service/auth"
+	"tf-cluster/library/code"
+	"tf-cluster/library/utils"
 )
 
 type RequestHelloInfo struct {
@@ -16,7 +16,7 @@ type RequestHelloInfo struct {
 // @Tags 示例
 // @Param name query string true "name 名称" required
 // @Success 200 {object} utils.Res
-// @Router /demo/hello-info [get]
+// @Router /auth/hello-info [get]
 func HelloInfoApi(c *gin.Context) {
 	var reqHelloInfo RequestHelloInfo
 	c.Bind(&reqHelloInfo)
@@ -24,7 +24,7 @@ func HelloInfoApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := demo.NewHelloService()
+	hs := auth.NewHelloService()
 	whereCondition := map[string]interface{}{
 		"name": reqHelloInfo.Name,
 	}
@@ -51,7 +51,7 @@ func HelloListApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := demo.NewHelloService()
+	hs := auth.NewHelloService()
 	whereCondition := map[string]interface{}{
 		"name": reqHelloList.Name,
 	}

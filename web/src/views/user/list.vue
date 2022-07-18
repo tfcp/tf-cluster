@@ -6,11 +6,11 @@
           <el-form-item label="名称">
             <el-input v-model.trim="searchParams.name"></el-input>
           </el-form-item>
-          <el-form-item label="性别">
-            <el-select v-model.trim="searchParams.sex">
+          <el-form-item label="用户类型">
+            <el-select v-model.trim="searchParams.role">
               <el-option label="全部" value=""></el-option>
               <el-option
-                v-for="item in sexList"
+                v-for="item in roleList"
                 :key="item.value"
                 :label="item.label"
                 :value="item.value">
@@ -38,9 +38,9 @@
         label="ID"
         width="50">
       </el-table-column>
-      <el-table-column label="名称" >
+      <el-table-column label="用户名" align="center">
         <template slot-scope="scope">
-          {{ scope.row.name }}
+          {{ scope.row.username }}
         </template>
       </el-table-column>
       <el-table-column label="年龄"  align="center">
@@ -48,22 +48,16 @@
           <span>{{ scope.row.age }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="角色"  align="center">
-        <template slot-scope="scope">
-          <span v-if="scope.row.role=='1'">管理员</span>
-          <span v-else>普通用户</span>
-        </template>
-      </el-table-column>
-      <el-table-column label="描述"  align="center">
+      <el-table-column label="介绍"  align="center">
         <template slot-scope="scope">
           {{ scope.row.introduction }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="性别" width="110" align="center">
+      <el-table-column class-name="status-col" label="角色" width="110" align="center">
         <template slot-scope="scope">
-          <el-tag :type="scope.row.sex | statusFilter">
-            <span v-if = "scope.row.sex == 1">男</span>
-            <span v-else>女</span>
+          <el-tag :type="scope.row.role | statusFilter">
+            <span v-if= "scope.row.role == 2">管理员</span>
+            <span v-else>开发者</span>
           </el-tag>
         </template>
       </el-table-column>
@@ -95,7 +89,7 @@
 </template>
 
 <script>
-import { getList, Delete, getCount } from '@/api/demo'
+import { getList, Delete, getCount } from '@/api/auth'
 
 export default {
   filters: {
@@ -116,14 +110,14 @@ export default {
         name: '',
         sex: ''
       },
-      sexList: [
+      roleList: [
         {
           value: '1',
-          label: '男'
+          label: '管理员'
         },
         {
           value: '2',
-          label: '女'
+          label: '开发者'
         }
       ],
       list: null,

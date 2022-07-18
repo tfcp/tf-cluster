@@ -1,22 +1,22 @@
-package demo
+package auth
 
 import (
-	"tf-cluster/internal/model/demo"
+	"tf-cluster/internal/model/auth"
 	"tf-cluster/library/log"
 	"tf-cluster/library/utils"
 )
 
 type UserService struct {
-	userModel *demo.User
+	userModel *auth.User
 }
 
 func NewUserService() (s *UserService) {
 	h := &UserService{}
-	h.userModel = &demo.User{}
+	h.userModel = &auth.User{}
 	return h
 }
 
-func (this *UserService) List(where map[string]interface{}, page, size int) ([]*demo.User, error) {
+func (this *UserService) List(where map[string]interface{}, page, size int) ([]*auth.User, error) {
 	list, err := this.userModel.ListUser(where, page, size)
 	if err != nil {
 		log.Logger.Errorf("UserService ListError: %v", err)
@@ -34,7 +34,7 @@ func (this *UserService) Count(where map[string]interface{}) (int, error) {
 	return count, nil
 }
 
-func (this *UserService) One(where map[string]interface{}) (*demo.User, error) {
+func (this *UserService) One(where map[string]interface{}) (*auth.User, error) {
 	one, err := this.userModel.OneUser(where)
 	if err != nil {
 		log.Logger.Errorf("UserService OneError: %v", err)
@@ -86,11 +86,9 @@ func (this *UserService) ChangeStatus(id, status int) error {
 	return nil
 }
 
-func (this *UserService) Save(id, status, role, sex, age int, name, avatar, introduction string) error {
-	newUser := demo.User{
+func (this *UserService) Save(id, status, role int, name, avatar, introduction string) error {
+	newUser := auth.User{
 		Name:         name,
-		Age:          age,
-		Sex:          sex,
 		Status:       status,
 		Role:         role,
 		Pwd:          "",
@@ -113,12 +111,6 @@ func (this *UserService) Save(id, status, role, sex, age int, name, avatar, intr
 		}
 		if role > 0 {
 			upMap["role"] = role
-		}
-		if sex > 0 {
-			upMap["sex"] = sex
-		}
-		if age > 0 {
-			upMap["age"] = age
 		}
 		if name != "" {
 			upMap["name"] = name

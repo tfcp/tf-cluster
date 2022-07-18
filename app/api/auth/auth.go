@@ -1,10 +1,10 @@
-package demo
+package auth
 
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/util/gvalid"
-	"tf-cluster/internal/service/demo"
+	"tf-cluster/internal/service/auth"
 	"tf-cluster/library/code"
 	"tf-cluster/library/utils"
 )
@@ -21,10 +21,10 @@ func LoginApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	us := demo.UserService{}
+	us := auth.UserService{}
 	whereMap := map[string]interface{}{
-		"name": reqLogin.Name,
-		"pwd":  reqLogin.Pwd,
+		"username": reqLogin.Name,
+		"password": reqLogin.Pwd,
 	}
 	um, err := us.One(whereMap)
 	if err != nil {
@@ -53,7 +53,7 @@ func InfoApi(c *gin.Context) {
 		return
 	}
 	//token := c.Query("token")
-	hs := demo.NewUserService()
+	hs := auth.NewUserService()
 	oneInfo, err := hs.Info(reqInfo.Token)
 	//oneInfo, err := hs.Info(token)
 	if err != nil {
@@ -64,7 +64,7 @@ func InfoApi(c *gin.Context) {
 }
 
 func TestApi(c *gin.Context) {
-	testInfo := g.Config().GetString("test","3")
+	testInfo := g.Config().GetString("test", "3")
 	utils.Response(c, code.ErrSuccess, testInfo)
 
 }

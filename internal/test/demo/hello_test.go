@@ -1,19 +1,19 @@
 package demo
 
 import (
-	"tf-cluster/internal/service/demo"
-	"tf-cluster/internal/test"
 	"github.com/gogf/gf/test/gtest"
 	"testing"
+	"tf-cluster/internal/service/auth"
+	"tf-cluster/internal/test"
 )
 
 var (
-	svc *demo.HelloService
+	svc *auth.HelloService
 )
 
 func init() {
 	test.SetupServer()
-	svc = demo.NewHelloService()
+	svc = auth.NewHelloService()
 }
 
 func Test_HelloService(t *testing.T) {

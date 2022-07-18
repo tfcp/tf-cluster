@@ -14,7 +14,7 @@ import (
 func CronDemo() [][]string {
 	var stdoutContents [][]string
 	stdoutContents = append(stdoutContents,
-		// cron demo
+		// cron auth
 		utils.AddCron("*/1 * * * * *", "HelloDemoCron1", "admin", HelloDemoCron),
 		utils.AddCron("*/2 * * * * *", "HelloDemoCron2", "admin", HelloDemoCron),
 	)

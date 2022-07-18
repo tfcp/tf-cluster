@@ -3,8 +3,8 @@ package router
 import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
+	"tf-cluster/app/api/auth"
 	"tf-cluster/app/api/cluster"
-	"tf-cluster/app/api/demo"
 	_ "tf-cluster/docs" // gin-swagger
 	"tf-cluster/internal/middleware/cors"
 
@@ -27,20 +27,20 @@ func RegisterRouter() {
 	//fs := utils.EmbeddingFileSystem(rice.MustFindBox(enum.RicePath).HTTPBox())
 	//Router.Use(utils.Serve("", fs))
 	Router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	dm := Router.Group("demo")
+	dm := Router.Group("auth")
 	//dm.Use(jwt.JWT()) # jwt auth
-	dm.GET("/test", demo.TestApi)
-	dm.GET("/hello-list", demo.HelloListApi)
-	dm.GET("/hello-info", demo.HelloInfoApi)
-	dm.GET("/user-list", demo.UserListApi)
-	dm.GET("/user-count", demo.UserCountApi)
-	dm.GET("/user-detail", demo.UserDetailApi)
-	dm.POST("/user-delete", demo.UserDeleteApi)
-	dm.POST("/user-change", demo.UserChangeStatusApi)
-	dm.POST("/user-save", demo.UserSaveApi)
+	dm.GET("/test", auth.TestApi)
+	dm.GET("/hello-list", auth.HelloListApi)
+	dm.GET("/hello-info", auth.HelloInfoApi)
+	dm.GET("/user-list", auth.UserListApi)
+	dm.GET("/user-count", auth.UserCountApi)
+	dm.GET("/user-detail", auth.UserDetailApi)
+	dm.POST("/user-delete", auth.UserDeleteApi)
+	dm.POST("/user-change", auth.UserChangeStatusApi)
+	dm.POST("/user-save", auth.UserSaveApi)
 	us := Router.Group("user")
-	us.Any("/login", demo.LoginApi)
-	us.GET("/info", demo.InfoApi)
+	us.Any("/login", auth.LoginApi)
+	us.GET("/info", auth.InfoApi)
 
 	// 集群
 	cls := Router.Group("watcher")

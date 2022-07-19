@@ -1,3 +1,6 @@
 package enum
 
-var ()
+var (
+	UserEnable = 1
+	UserUnable = 2
+)

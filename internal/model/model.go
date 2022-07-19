@@ -15,8 +15,9 @@ var (
 )
 
 type Model struct {
-	ID       int    `gorm:"primary_key" json:"id"`
-	CreateAt string `json:"create_at"`
+	ID       int       `gorm:"primary_key" json:"id"`
+	CreateAt time.Time `gorm:"column:create_at;default:'CURRENT_TIMESTAMP'" json:"create_at"`
+	UpdateAt time.Time `gorm:"column:update_at;default:'CURRENT_TIMESTAMP'" json:"update_at"`
 }
 
 func (this *Model) GetOffset(page, size int) int {
@@ -30,9 +31,9 @@ func (this *Model) GetOffset(page, size int) int {
 func (this *Model) CommonWhere(where map[string]interface{}) *gorm.DB {
 	db := Db
 	// like search
-	if _, ok := where["name"]; ok {
-		db = db.Where("name like ?", "%"+where["name"].(string)+"%")
-		delete(where, "name")
+	if _, ok := where["username"]; ok {
+		db = db.Where("username like ?", "%"+where["username"].(string)+"%")
+		delete(where, "username")
 	}
 	return db
 }

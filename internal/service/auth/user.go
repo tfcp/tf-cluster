@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"golang.org/x/crypto/bcrypt"
 	"tf-cluster/internal/model/auth"
 	"tf-cluster/library/log"
 	"tf-cluster/library/utils"
@@ -86,12 +87,17 @@ func (this *UserService) ChangeStatus(id, status int) error {
 	return nil
 }
 
-func (this *UserService) Save(id, status, role int, name, avatar, introduction string) error {
+func (this *UserService) Save(id, status, role int, name, avatar, introduction, pwd string) error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), bcrypt.DefaultCost) //密码加密处理
+	if err != nil {
+		log.Logger.Errorf("UserService Save GenerateFromPasswordError: %v", err)
+		return err
+	}
 	newUser := auth.User{
 		Name:         name,
 		Status:       status,
 		Role:         role,
-		Pwd:          "",
+		Pwd:          string(hash),
 		Avatar:       avatar,
 		Introduction: introduction,
 	}
@@ -113,21 +119,24 @@ func (this *UserService) Save(id, status, role int, name, avatar, introduction s
 			upMap["role"] = role
 		}
 		if name != "" {
-			upMap["name"] = name
+			upMap["username"] = name
 		}
 		if avatar != "" {
 			upMap["avatar"] = avatar
 		}
+		if pwd != "" {
+			upMap["password"] = string(hash)
+		}
 		if introduction != "" {
 			upMap["introduction"] = introduction
 		}
-		if err := this.userModel.UpdateUser(userUp, upMap); err != nil {
+		if err = this.userModel.UpdateUser(userUp, upMap); err != nil {
 			log.Logger.Errorf("UserService Save UpdateUserError: %v", err)
 			return err
 		}
 		return nil
 	}
-	if err := this.userModel.CreateUser(newUser); err != nil {
+	if err = this.userModel.CreateUser(newUser); err != nil {
 		log.Logger.Errorf("UserService Save CreateUserError: %v", err)
 		return nil
 	}

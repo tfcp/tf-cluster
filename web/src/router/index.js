@@ -56,22 +56,23 @@ export const constantRoutes = [
   },
 
   {
-    path: '/user',
+    path: '/system',
     component: Layout,
-    redirect: '/user/list',
-    name: 'User',
-    meta: { title: '用户', icon: 'el-icon-s-help' },
+    redirect: '/system/user-list',
+    name: 'System',
+    meta: { title: '系统', icon: 'el-icon-s-help' },
     children: [
       {
-        path: 'list',
+        path: 'user-list',
         name: '用户列表',
-        component: () => import('@/views/user/list'),
+        component: () => import('@/views/system/user-list'),
         meta: { title: '用户列表', icon: 'table' }
       },
       {
-        path: 'add',
+        path: 'user-add',
         name: '用户创建',
-        component: () => import('@/views/user/add'),
+        hidden: true,
+        component: () => import('@/views/system/user-add'),
         meta: { title: '用户创建', icon: 'tree' }
       }
     ]

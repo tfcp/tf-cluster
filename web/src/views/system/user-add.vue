@@ -1,44 +1,37 @@
 <template>
   <div class="app-container">
     <el-form ref="userRule" :model="form" :rules="rules" label-width="120px">
-      <el-form-item label="姓名" prop="name">
-        <el-input v-model="form.name"  placeholder="请填写姓名" />
+      <el-form-item label="用户名" prop="name">
+        <el-input v-model="form.name" placeholder="请填写用户名" />
       </el-form-item>
-      <el-form-item label="性别">
+      <el-form-item label="用户密码" prop="pwd">
+        <el-input v-model="form.pwd" placeholder="请填写用户密码" show-password />
+      </el-form-item>
+      <el-form-item label="角色">
         <el-col :span="10">
-          <el-select v-model="form.sex" placeholder="请选择性别" @change="getChange">
+          <el-select v-model="form.role" placeholder="请选择角色" @change="getChange">
             <el-option
-              v-for="item in sexList"
+              v-for="item in roleList"
               :key="item.label"
               :label="item.label"
               :value="item.value">
             </el-option>
           </el-select>
         </el-col>
-        <el-col :span="10" >
-          <el-form-item label="年龄" prop="age">
-            <el-input v-model="form.age" placeholder="请填写年龄" />
-          </el-form-item>
-        </el-col>
+<!--        <el-col :span="10" >-->
+<!--          <el-form-item label="年龄" prop="age">-->
+<!--            <el-input v-model="form.age" placeholder="请填写年龄" />-->
+<!--          </el-form-item>-->
+<!--        </el-col>-->
       </el-form-item>
-      <el-form-item label="状态">
-        <el-switch
-          v-model="form.status"
-          :active-value="1"
-          :inactive-vlaue="2"
-          @change="onChange(form)"
-          active-color="#13ce66"
-          inactive-color="#ff4949">
-        </el-switch>
-      </el-form-item>
-      <el-form-item label="类型">
-        <el-radio-group v-model="form.role">
-          <el-radio :label="1">admin</el-radio>
-          <el-radio :label="2">user</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label="描述">
-        <el-input v-model="form.introduction" type="textarea" />
+<!--      <el-form-item label="角色">-->
+<!--        <el-radio-group v-model="form.role">-->
+<!--          <el-radio :label="1">admin</el-radio>-->
+<!--          <el-radio :label="2">user</el-radio>-->
+<!--        </el-radio-group>-->
+<!--      </el-form-item>-->
+      <el-form-item label="用户介绍">
+        <el-input v-model="form.introduction"  type="textarea" :rows="10" placeholder="请填写用户描述"/>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">提交</el-button>
@@ -54,28 +47,30 @@ import { getDetail, enable, disable , save} from '@/api/auth'
 export default {
   data() {
     return {
-      sexList: [
-        { value: 1, label: '男' },
-        { value: 2, label: '女' }
+      roleList: [
+        { value: 1, label: '管理员' },
+        { value: 2, label: '开发者' }
       ],
       form: {
         id: 0,
         name: '',
-        age: '',
         role: 1,
-        sex: 1,
         introduction: '',
-        status: '2'
+        status: '2' // 默认状态为禁用
       },
       rules: {
         name: [
           { required: true, message: '请输入用户名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          { min: 3, max: 12, message: '长度在 3 到 12 个字符', trigger: 'blur' }
         ],
-        age: [
-          { required: true, message: '请填写年龄', trigger: 'blur' },
-          { type: 'number', message: '请填写数字', trigger: 'blur', transform: (value) => Number(value)},
+        pwd: [
+          { required: true, message: '请输入用户密码', trigger: 'blur' },
+          { min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur' }
         ]
+        // age: [
+        //   { required: true, message: '请填写年龄', trigger: 'blur' },
+        //   { type: 'number', message: '请填写数字', trigger: 'blur', transform: (value) => Number(value)},
+        // ]
       }
     }
   },
@@ -112,8 +107,8 @@ export default {
             this.$message({
               message: '提交成功',
               type: 'success'
-            });
-            this.$router.push('/user/list')
+            })
+            this.$router.push('/system/user-list')
           })
         } else {
           this.$message({

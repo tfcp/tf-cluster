@@ -23,9 +23,17 @@ var (
 		Code:    -402,
 		Message: "token过期",
 	}
-	ErrPwd = &Error{
+	ErrAccount = &Error{
 		Code:    -403,
+		Message: "账号异常",
+	}
+	ErrPwd = &Error{
+		Code:    -404,
 		Message: "账号密码错误",
+	}
+	ErrUnable = &Error{
+		Code:    -405,
+		Message: "你的账号已被禁用",
 	}
 	ErrParam = &Error{
 		Code:    10001,

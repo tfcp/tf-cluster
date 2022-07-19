@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogf/gf/frame/g"
 	"github.com/gogf/gf/util/gvalid"
+	"golang.org/x/crypto/bcrypt"
+	"tf-cluster/internal/enum"
 	"tf-cluster/internal/service/auth"
 	"tf-cluster/library/code"
 	"tf-cluster/library/utils"
@@ -24,16 +26,25 @@ func LoginApi(c *gin.Context) {
 	us := auth.UserService{}
 	whereMap := map[string]interface{}{
 		"username": reqLogin.Name,
-		"password": reqLogin.Pwd,
 	}
 	um, err := us.One(whereMap)
+	if err != nil {
+		utils.Response(c, code.ErrAccount, err.Error())
+		return
+	}
+	// 用户禁用
+	if um.Status == enum.UserUnable {
+		utils.Response(c, code.ErrUnable, err.Error())
+		return
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(um.Pwd), []byte(reqLogin.Pwd)) //加密处理
 	if err != nil {
 		utils.Response(c, code.ErrPwd, err.Error())
 		return
 	}
 	token, err := utils.GenerateToken(um.Name, um.Avatar, um.Introduction, um.Role)
 	if err != nil {
-		utils.Response(c, code.ErrPwd, err.Error())
+		utils.Response(c, code.ErrAccount, err.Error())
 		return
 	}
 	utils.Response(c, code.ErrSuccess, map[string]interface{}{

@@ -10,7 +10,7 @@ import (
 
 type RequestUserList struct {
 	Name     string `json:"name" form:"name"`
-	Sex      int    `json:"sex" form:"sex"`
+	Role     int    `json:"role" form:"role"`
 	Page     int    `json:"page" form:"page"`
 	PageSize int    `json:"page_size" form:"page_size"`
 }
@@ -33,10 +33,10 @@ func UserListApi(c *gin.Context) {
 	hs := auth.NewUserService()
 	whereCondition := map[string]interface{}{}
 	if reqUserList.Name != "" {
-		whereCondition["name"] = reqUserList.Name
+		whereCondition["username"] = reqUserList.Name
 	}
-	if reqUserList.Sex != 0 {
-		whereCondition["sex"] = reqUserList.Sex
+	if reqUserList.Role != 0 {
+		whereCondition["role"] = reqUserList.Role
 	}
 	ListInfo, err := hs.List(whereCondition, reqUserList.Page, reqUserList.PageSize)
 	if err != nil {
@@ -51,7 +51,7 @@ func UserListApi(c *gin.Context) {
 
 type RequestUserCount struct {
 	Name string `json:"name" form:"name"`
-	Sex  int    `json:"sex" form:"sex"`
+	Role int    `json:"role" form:"role"`
 }
 
 func UserCountApi(c *gin.Context) {
@@ -64,10 +64,10 @@ func UserCountApi(c *gin.Context) {
 	hs := auth.NewUserService()
 	whereCondition := map[string]interface{}{}
 	if reqUserCount.Name != "" {
-		whereCondition["name"] = reqUserCount.Name
+		whereCondition["username"] = reqUserCount.Name
 	}
-	if reqUserCount.Sex != 0 {
-		whereCondition["sex"] = reqUserCount.Sex
+	if reqUserCount.Role != 0 {
+		whereCondition["role"] = reqUserCount.Role
 	}
 	ListInfo, err := hs.Count(whereCondition)
 	if err != nil {
@@ -147,14 +147,13 @@ func UserChangeStatusApi(c *gin.Context) {
 }
 
 type RequestUserSave struct {
-	Id           int    `json:"id" form:"id" valid:"id      @required|integer|min:1#id不能为空"`
+	Id           int    `json:"id" form:"id"`
 	Status       int    `json:"status" form:"status" valid:"status      @required|integer|min:1#status不能为空"`
 	Role         int    `json:"role" form:"role" valid:"role      @required|integer|min:1#role不能为空"`
-	Sex          int    `json:"sex" form:"sex" valid:"sex      @required|integer|min:1#sex不能为空"`
-	Age          int    `json:"age" form:"age"`
 	Name         string `json:"name" form:"name" valid:"name      @required#name不能为空"`
+	Pwd          string `json:"pwd" form:"pwd" valid:"pwd      @required#pwd不能为空"`
 	Avatar       string `json:"avatar" form:"avatar"`
-	Introduction string `json:"introduction" form:"introduction" valid:"introduction      @required#introduction不能为空"`
+	Introduction string `json:"introduction" form:"introduction"`
 }
 
 func UserSaveApi(c *gin.Context) {
@@ -170,7 +169,9 @@ func UserSaveApi(c *gin.Context) {
 		reqUserSave.Role,
 		reqUserSave.Name,
 		reqUserSave.Avatar,
-		reqUserSave.Introduction)
+		reqUserSave.Introduction,
+		reqUserSave.Pwd,
+	)
 	if err != nil {
 		utils.Response(c, code.ErrSystem, err.Error())
 		return

@@ -8,7 +8,6 @@
           </el-form-item>
           <el-form-item label="用户类型">
             <el-select v-model.trim="searchParams.role">
-              <el-option label="全部" value=""></el-option>
               <el-option
                 v-for="item in roleList"
                 :key="item.value"
@@ -19,7 +18,7 @@
           </el-form-item>
           <el-form-item>
             <el-button type="primary" icon="el-icon-search" @click="fetchData()">搜索</el-button>
-            <el-button type="success" @click="toEdit(0)">创建</el-button>
+            <el-button type="success" icon="el-icon-user" @click="toEdit(0)">添加用户</el-button>
           </el-form-item>
         </el-row>
       </el-form>
@@ -43,9 +42,22 @@
           {{ scope.row.username }}
         </template>
       </el-table-column>
-      <el-table-column label="年龄"  align="center">
+      <el-table-column class-name="status-col" label="角色" width="110" align="center">
         <template slot-scope="scope">
-          <span>{{ scope.row.age }}</span>
+          <el-tag v-if= "scope.row.role == 1">管理员</el-tag>
+          <el-tag v-else type="warning">开发者</el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column label="用户状态" width="110" align="center">
+        <template slot-scope="scope">
+          <el-switch
+            v-model="scope.row.status"
+            :active-value="1"
+            :inactive-vlaue="2"
+            @change="statusChange(scope.row.id, scope.row.status)"
+            active-color="#13ce66"
+            inactive-color="#ff4949">
+          </el-switch>
         </template>
       </el-table-column>
       <el-table-column label="介绍"  align="center">
@@ -53,18 +65,16 @@
           {{ scope.row.introduction }}
         </template>
       </el-table-column>
-      <el-table-column class-name="status-col" label="角色" width="110" align="center">
-        <template slot-scope="scope">
-          <el-tag :type="scope.row.role | statusFilter">
-            <span v-if= "scope.row.role == 2">管理员</span>
-            <span v-else>开发者</span>
-          </el-tag>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" prop="created_at" label="创建日期" width="200">
+      <el-table-column align="center" prop="create_at" label="创建日期" width="200">
         <template slot-scope="scope">
           <i class="el-icon-time" />
           <span>{{ scope.row.create_at | formatTime}}</span>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" prop="update_at" label="更新日期" width="200">
+        <template slot-scope="scope">
+          <i class="el-icon-time" />
+          <span>{{ scope.row.update_at | formatTime}}</span>
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作" width="220">
@@ -89,7 +99,7 @@
 </template>
 
 <script>
-import { getList, Delete, getCount } from '@/api/auth'
+import {getList, Delete, getCount, enable, disable} from '@/api/auth'
 
 export default {
   filters: {
@@ -108,9 +118,13 @@ export default {
         page_size: 20,
         page: 1,
         name: '',
-        sex: ''
+        role: '0'
       },
       roleList: [
+        {
+          value: '0',
+          label: '全部'
+        },
         {
           value: '1',
           label: '管理员'
@@ -139,6 +153,13 @@ export default {
         this.countData = response.data.result
       })
     },
+    statusChange(id, status) {
+      if(status) {
+        enable(id)
+      } else {
+        disable(id)
+      }
+    },
     handleSizeChange(val) {
       this.searchParams.page_size = val
       this.fetchData()
@@ -162,9 +183,9 @@ export default {
     toEdit(id) {
       let path = ''
       if (id === 0) {
-        path = '/user/add'
+        path = '/system/user-add'
       } else {
-        path = '/user/add?id=' + id
+        path = '/system/user-add?id=' + id
       }
       this.$router.push(path)
     }

@@ -7,6 +7,7 @@ import (
 	"tf-cluster/app/api/cluster"
 	_ "tf-cluster/docs" // gin-swagger
 	"tf-cluster/internal/middleware/cors"
+	"tf-cluster/internal/middleware/jwt"
 
 	//_ "tf-watcher/internal/rice"
 	//"tf-watcher/library/utils"
@@ -27,17 +28,18 @@ func RegisterRouter() {
 	//fs := utils.EmbeddingFileSystem(rice.MustFindBox(enum.RicePath).HTTPBox())
 	//Router.Use(utils.Serve("", fs))
 	Router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
-	dm := Router.Group("auth")
-	//dm.Use(jwt.JWT()) # jwt auth
-	dm.GET("/test", auth.TestApi)
-	dm.GET("/hello-list", auth.HelloListApi)
-	dm.GET("/hello-info", auth.HelloInfoApi)
-	dm.GET("/user-list", auth.UserListApi)
-	dm.GET("/user-count", auth.UserCountApi)
-	dm.GET("/user-detail", auth.UserDetailApi)
-	dm.POST("/user-delete", auth.UserDeleteApi)
-	dm.POST("/user-change", auth.UserChangeStatusApi)
-	dm.POST("/user-save", auth.UserSaveApi)
+	at := Router.Group("auth")
+	at.Use(jwt.JWT())
+	at.GET("/test", auth.TestApi)
+	at.GET("/hello-list", auth.HelloListApi)
+	at.GET("/hello-info", auth.HelloInfoApi)
+	at.GET("/user-list", auth.UserListApi)
+	at.GET("/user-count", auth.UserCountApi)
+	at.GET("/user-detail", auth.UserDetailApi)
+	at.POST("/user-delete", auth.UserDeleteApi)
+	at.POST("/user-change", auth.UserChangeStatusApi)
+	at.POST("/user-save", auth.UserSaveApi)
+	at.POST("/pwd-edit", auth.UserPwdChangeApi)
 	us := Router.Group("user")
 	us.Any("/login", auth.LoginApi)
 	us.GET("/info", auth.InfoApi)

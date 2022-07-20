@@ -11,7 +11,7 @@ import (
 
 var (
 	jwtSecret []byte
-	jwtExpire time.Duration = 3 * time.Hour
+	jwtExpire time.Duration = 3 * time.Hour // jwt token周期
 )
 
 type Claims struct {
@@ -19,12 +19,12 @@ type Claims struct {
 	Roles        []string `json:"role"`
 	Introduction string   `json:"introduction"`
 	Name         string   `json:"name"`
+	Id           int      `json:"id"`
 	jwt.StandardClaims
 }
 
 // GenerateToken generate tokens used for auth
-//func GenerateToken(username, password string) (string, error) {
-func GenerateToken(name, avatar, introduction string, roles int) (string, error) {
+func GenerateToken(name, avatar, introduction string, id, roles int) (string, error) {
 	nowTime := time.Now()
 	expireTime := nowTime.Add(jwtExpire)
 	//EncodeMD5(username),
@@ -35,9 +35,10 @@ func GenerateToken(name, avatar, introduction string, roles int) (string, error)
 		Roles:        []string{strconv.Itoa(roles)},
 		Introduction: introduction,
 		Name:         name,
+		Id:           id,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: expireTime.Unix(),
-			Issuer:    "gin-blog",
+			Issuer:    "tf-cluster",
 		},
 	}
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

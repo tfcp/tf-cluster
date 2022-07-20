@@ -69,6 +69,12 @@ export const constantRoutes = [
         meta: { title: '用户列表', icon: 'table' }
       },
       {
+        path: 'pwd-edit',
+        name: '密码修改',
+        component: () => import('@/views/system/pwd-edit'),
+        meta: { title: '密码修改', icon: 'el-icon-paperclip' }
+      },
+      {
         path: 'user-add',
         name: '用户创建',
         hidden: true,

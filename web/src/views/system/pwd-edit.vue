@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-form ref="userRule" :model="form" :rules="rules" label-width="120px">
-      <el-form-item label="用户名" prop="name">
+      <el-form-item label="旧密码" prop="name">
         <el-input v-model="form.name" placeholder="请填写用户名" />
       </el-form-item>
       <el-form-item label="用户密码" prop="pwd">

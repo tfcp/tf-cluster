@@ -39,6 +39,10 @@ var (
 		Code:    -406,
 		Message: "用户名已存在",
 	}
+	ErrUserUpdate = &Error{
+		Code:    -407,
+		Message: "更新异常",
+	}
 	ErrParam = &Error{
 		Code:    10001,
 		Message: "请求参数错误",

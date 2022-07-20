@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form :inline="true">
         <el-row>
-          <el-form-item label="名称">
+          <el-form-item label="用户名称">
             <el-input v-model.trim="searchParams.name"></el-input>
           </el-form-item>
           <el-form-item label="用户类型">

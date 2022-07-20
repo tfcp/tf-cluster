@@ -1,6 +1,9 @@
 package auth
 
 import (
+	"errors"
+	"fmt"
+	"golang.org/x/crypto/bcrypt"
 	"tf-cluster/internal/model/auth"
 	"tf-cluster/library/log"
 	"tf-cluster/library/utils"
@@ -104,11 +107,42 @@ func (this *UserService) UserExists(id int, name string) bool {
 	return false
 }
 
-func (this *UserService) Save(id, status, role int, name, avatar, introduction, pwd string) error {
+func (this *UserService) ChangePwd(id int, oldPwd, newPwd1, newPwd2 string) error {
+	var err error
+
+	whereOld := map[string]interface{}{
+		"id": id,
+	}
+	oldUser, err := this.userModel.OneUser(whereOld)
+	if err != nil {
+		log.Logger.Errorf("UserService ChangePwd OneUserError: %v", err)
+		return err
+	}
+	hash, err := bcrypt.GenerateFromPassword([]byte(oldPwd), bcrypt.DefaultCost) //密码加密处理
+	if err != nil {
+		log.Logger.Errorf("UserModel BeforeSaveError: %v", err)
+		return err
+	}
+	if oldUser.Pwd != string(hash) {
+		return errors.New(fmt.Sprintf("旧密码不正确: %v", err))
+	}
+	if newPwd1 != newPwd2 {
+		return errors.New(fmt.Sprintf("两次密码输入不一样: %v", err))
+	}
+	upMap := map[string]interface{}{
+		"password": newPwd1,
+	}
+	if err := this.userModel.UpdateUser(oldUser, upMap); err != nil {
+		log.Logger.Errorf("UserService ChangePwd UpdateUserError: %v", err)
+		return err
+	}
+	return err
+}
+
+func (this *UserService) Save(id, role int, name, avatar, introduction, pwd string) error {
 	var err error
 	newUser := auth.User{
 		Name:         name,
-		Status:       status,
 		Role:         role,
 		Pwd:          pwd,
 		Avatar:       avatar,
@@ -125,9 +159,6 @@ func (this *UserService) Save(id, status, role int, name, avatar, introduction, 
 			return err
 		}
 		upMap := map[string]interface{}{}
-		if status > 0 {
-			upMap["status"] = status
-		}
 		if role > 0 {
 			upMap["role"] = role
 		}

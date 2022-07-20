@@ -3,6 +3,7 @@ package auth
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/gogf/gf/util/gvalid"
+	"tf-cluster/internal/middleware/jwt"
 	"tf-cluster/internal/service/auth"
 	"tf-cluster/library/code"
 	"tf-cluster/library/utils"
@@ -148,7 +149,6 @@ func UserChangeStatusApi(c *gin.Context) {
 
 type RequestUserSave struct {
 	Id           int    `json:"id" form:"id"`
-	Status       int    `json:"status" form:"status" valid:"status      @required|integer|min:1#status不能为空"`
 	Role         int    `json:"role" form:"role" valid:"role      @required|integer|min:1#role不能为空"`
 	Name         string `json:"name" form:"name" valid:"name      @required#name不能为空"`
 	Pwd          string `json:"pwd" form:"pwd" valid:"pwd      @required#pwd不能为空"`
@@ -169,7 +169,6 @@ func UserSaveApi(c *gin.Context) {
 		return
 	}
 	err := us.Save(reqUserSave.Id,
-		reqUserSave.Status,
 		reqUserSave.Role,
 		reqUserSave.Name,
 		reqUserSave.Avatar,
@@ -181,4 +180,31 @@ func UserSaveApi(c *gin.Context) {
 		return
 	}
 	utils.Response(c, code.ErrSuccess, map[string]interface{}{})
+}
+
+type RequestUserPwdChange struct {
+	OldPwd  string `json:"old_pwd" form:"old_pwd" valid:"old_pwd      @required#old_pwd不能为空"`
+	NewPwd1 string `json:"new_pwd_1" form:"new_pwd_1" valid:"new_pwd_1      @required#new_pwd_1不能为空"`
+	NewPwd2 string `json:"new_pwd_2" form:"new_pwd_2" valid:"new_pwd_2      @required#new_pwd_2不能为空"`
+}
+
+func UserPwdChangeApi(c *gin.Context) {
+	var reqUserPwdChange RequestUserPwdChange
+	c.Bind(&reqUserPwdChange)
+	if err := gvalid.CheckStruct(c, reqUserPwdChange, nil); err != nil {
+		utils.Response(c, code.ErrSystem, err.FirstString())
+		return
+	}
+	us := auth.NewUserService()
+	authInfo := jwt.GetUserInfo(c)
+	if err := us.ChangePwd(
+		authInfo.Id,
+		reqUserPwdChange.OldPwd,
+		reqUserPwdChange.NewPwd1,
+		reqUserPwdChange.NewPwd2,
+	); err != nil {
+		utils.Response(c, code.ErrUserUpdate, err.Error())
+		return
+	}
+	utils.Response(c, code.ErrSuccess, nil)
 }

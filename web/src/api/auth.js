@@ -68,3 +68,12 @@ export function save(params) {
     baseURL: process.env.VUE_APP_URL
   })
 }
+
+export function changePwd(params) {
+  return request({
+    url: '/auth/pwd-edit',
+    method: 'post',
+    params,
+    baseURL: process.env.VUE_APP_URL
+  })
+}

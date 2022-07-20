@@ -99,6 +99,12 @@ func (this *User) CreateUser(user User) error {
 
 // user数据查询统一处理
 func (this *User) AfterFind() error {
+	//hash, err := bcrypt.GenerateFromPassword([]byte(this.Pwd), bcrypt.DefaultCost) //密码加密处理
+	//if err != nil {
+	//	log.Logger.Errorf("UserModel BeforeSaveError: %v", err)
+	//	return err
+	//}
+	//this.Pwd = string(hash)
 	return nil
 }
 

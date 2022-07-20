@@ -109,7 +109,6 @@ func (this *UserService) UserExists(id int, name string) bool {
 
 func (this *UserService) ChangePwd(id int, oldPwd, newPwd1, newPwd2 string) error {
 	var err error
-
 	whereOld := map[string]interface{}{
 		"id": id,
 	}
@@ -123,6 +122,7 @@ func (this *UserService) ChangePwd(id int, oldPwd, newPwd1, newPwd2 string) erro
 		log.Logger.Errorf("UserModel BeforeSaveError: %v", err)
 		return err
 	}
+	fmt.Println("hash:", string(hash))
 	if oldUser.Pwd != string(hash) {
 		return errors.New(fmt.Sprintf("旧密码不正确: %v", err))
 	}

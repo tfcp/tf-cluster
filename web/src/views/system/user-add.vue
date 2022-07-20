@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { getDetail, save} from '@/api/auth'
+import { getDetail, save } from '@/api/auth'
 
 export default {
   data() {

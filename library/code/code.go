@@ -41,7 +41,7 @@ var (
 	}
 	ErrUserUpdate = &Error{
 		Code:    -407,
-		Message: "更新异常",
+		Message: "更新失败",
 	}
 	ErrParam = &Error{
 		Code:    10001,

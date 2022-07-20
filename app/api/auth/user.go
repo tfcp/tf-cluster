@@ -163,8 +163,12 @@ func UserSaveApi(c *gin.Context) {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
-	hs := auth.NewUserService()
-	err := hs.Save(reqUserSave.Id,
+	us := auth.NewUserService()
+	if us.UserExists(reqUserSave.Id, reqUserSave.Name) {
+		utils.Response(c, code.ErrUserExist, nil)
+		return
+	}
+	err := us.Save(reqUserSave.Id,
 		reqUserSave.Status,
 		reqUserSave.Role,
 		reqUserSave.Name,

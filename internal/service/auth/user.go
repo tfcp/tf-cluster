@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"golang.org/x/crypto/bcrypt"
 	"tf-cluster/internal/model/auth"
 	"tf-cluster/library/log"
 	"tf-cluster/library/utils"
@@ -87,17 +86,31 @@ func (this *UserService) ChangeStatus(id, status int) error {
 	return nil
 }
 
-func (this *UserService) Save(id, status, role int, name, avatar, introduction, pwd string) error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(pwd), bcrypt.DefaultCost) //密码加密处理
-	if err != nil {
-		log.Logger.Errorf("UserService Save GenerateFromPasswordError: %v", err)
-		return err
+func (this *UserService) UserExists(id int, name string) bool {
+	if id > 0 {
+		return false
 	}
+	whereUser := map[string]interface{}{
+		"username": name,
+	}
+	user, err := this.userModel.OneUser(whereUser)
+	if err != nil {
+		log.Logger.Errorf("UserExists OneUserError: %v", err)
+		return true
+	}
+	if user.ID != 0 {
+		return true
+	}
+	return false
+}
+
+func (this *UserService) Save(id, status, role int, name, avatar, introduction, pwd string) error {
+	var err error
 	newUser := auth.User{
 		Name:         name,
 		Status:       status,
 		Role:         role,
-		Pwd:          string(hash),
+		Pwd:          pwd,
 		Avatar:       avatar,
 		Introduction: introduction,
 	}
@@ -125,7 +138,7 @@ func (this *UserService) Save(id, status, role int, name, avatar, introduction, 
 			upMap["avatar"] = avatar
 		}
 		if pwd != "" {
-			upMap["password"] = string(hash)
+			upMap["password"] = pwd
 		}
 		if introduction != "" {
 			upMap["introduction"] = introduction

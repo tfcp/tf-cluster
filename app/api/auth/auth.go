@@ -34,7 +34,7 @@ func LoginApi(c *gin.Context) {
 	}
 	// 用户禁用
 	if um.Status == enum.UserUnable {
-		utils.Response(c, code.ErrUnable, err.Error())
+		utils.Response(c, code.ErrUnable, nil)
 		return
 	}
 	err = bcrypt.CompareHashAndPassword([]byte(um.Pwd), []byte(reqLogin.Pwd)) //加密处理

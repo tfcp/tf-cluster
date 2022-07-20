@@ -2,7 +2,9 @@ package auth
 
 import (
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 	"tf-cluster/internal/model"
+	"tf-cluster/library/log"
 )
 
 // gorm文档: https://www.tizi365.com/archives/22.html
@@ -92,5 +94,30 @@ func (this *User) CreateUser(user User) error {
 	if err != nil {
 		return err
 	}
+	return nil
+}
+
+// user数据查询统一处理
+func (this *User) AfterFind() error {
+	return nil
+}
+
+func (this *User) BeforeSave() error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(this.Pwd), bcrypt.DefaultCost) //密码加密处理
+	if err != nil {
+		log.Logger.Errorf("UserModel BeforeSaveError: %v", err)
+		return err
+	}
+	this.Pwd = string(hash)
+	return nil
+}
+
+func (this *User) BeforeUpdate() error {
+	hash, err := bcrypt.GenerateFromPassword([]byte(this.Pwd), bcrypt.DefaultCost) //密码加密处理
+	if err != nil {
+		log.Logger.Errorf("UserModel BeforeUpdateError: %v", err)
+		return err
+	}
+	this.Pwd = string(hash)
 	return nil
 }

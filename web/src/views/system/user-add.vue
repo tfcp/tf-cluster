@@ -5,7 +5,7 @@
         <el-input v-model="form.name" placeholder="请填写用户名" />
       </el-form-item>
       <el-form-item label="用户密码" prop="pwd">
-        <el-input v-model="form.pwd" placeholder="请填写用户密码" show-password />
+        <el-input v-model="form.pwd" :disabled="(this.$route.query.id) != null ? true : false" placeholder="请填写用户密码" show-password />
       </el-form-item>
       <el-form-item label="角色">
         <el-col :span="10">
@@ -42,7 +42,7 @@
 </template>
 
 <script>
-import { getDetail, enable, disable , save} from '@/api/auth'
+import { getDetail, save} from '@/api/auth'
 
 export default {
   data() {
@@ -75,31 +75,18 @@ export default {
     }
   },
   created() {
-    if(this.$route.query.id != null) {
+    if (this.$route.query.id != null) {
       getDetail(this.$route.query.id).then(response => {
         const res = response.data.result
         this.form.id = res.id
-        this.form.name = res.name
+        this.form.name = res.username
         this.form.role = res.role
+        this.form.pwd = res.password
         this.form.introduction = res.introduction
-        this.form.sex = res.sex
-        this.form.status = res.status
       })
     }
   },
   methods: {
-    getChange() {
-    },
-    onChange(item) {
-      if(item.id === 0) {
-        return
-      }
-      if(item.status) {
-        enable(item.id)
-      } else {
-        disable(item.id)
-      }
-    },
     onSubmit() {
       this.$refs['userRule'].validate((valid) => {
         if (valid) {

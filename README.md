@@ -83,7 +83,8 @@ vue项目npm run dev
 ## 工作计划
 1. 自动驱逐
 2. HPA
-3. CRD(DEVOPS资源管理)
+3. CRD(DEVOPS关联资源管理)
+   (clb cfs service deploy...)
 4. Devops 
 5. k8s集群资源管理
-6. operator开发
+6. operator开发(informer)

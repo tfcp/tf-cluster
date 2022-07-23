@@ -35,9 +35,9 @@ var (
 		Code:    -405,
 		Message: "你的账号已被禁用, 请联系管理员激活",
 	}
-	ErrUserExist = &Error{
+	ErrExist = &Error{
 		Code:    -406,
-		Message: "用户名已存在",
+		Message: "该名称已存在",
 	}
 	ErrUserUpdate = &Error{
 		Code:    -407,

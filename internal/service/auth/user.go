@@ -117,13 +117,8 @@ func (this *UserService) ChangePwd(id int, oldPwd, newPwd1, newPwd2 string) erro
 		log.Logger.Errorf("UserService ChangePwd OneUserError: %v", err)
 		return err
 	}
-	hash, err := bcrypt.GenerateFromPassword([]byte(oldPwd), bcrypt.DefaultCost) //密码加密处理
+	err = bcrypt.CompareHashAndPassword([]byte(oldUser.Pwd), []byte(oldPwd)) //加密处理
 	if err != nil {
-		log.Logger.Errorf("UserModel BeforeSaveError: %v", err)
-		return err
-	}
-	fmt.Println("hash:", string(hash))
-	if oldUser.Pwd != string(hash) {
 		return errors.New(fmt.Sprintf("旧密码不正确: %v", err))
 	}
 	if newPwd1 != newPwd2 {

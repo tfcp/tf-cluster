@@ -20,7 +20,7 @@ export function getCount(params) {
 
 export function getDetail(id) {
   return request({
-    url: '/auth/user-detail?id=' + id,
+    url: '/auth/user-info?id=' + id,
     method: 'get',
     baseURL: process.env.VUE_APP_URL
   })

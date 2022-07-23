@@ -10,10 +10,10 @@ func WatchCluster() {
 	clusters := cluster.NewClusters()
 	clusters.Add(
 		// 节点监听
-		//&resource.NodeWatcher{},
-		&resource.PodWatcher{},
-		&resource.DeployWatcher{},
-		&resource.ServiceWatcher{},
+		&resource.NodeWatcher{},
+	//&resource.PodWatcher{},
+	//&resource.DeployWatcher{},
+	//&resource.ServiceWatcher{},
 	)
 	log.Logger.Infof("watchCluster start...")
 	clusters.Listen()

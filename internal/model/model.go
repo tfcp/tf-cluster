@@ -35,6 +35,10 @@ func (this *Model) CommonWhere(where map[string]interface{}) *gorm.DB {
 		db = db.Where("username like ?", "%"+where["username"].(string)+"%")
 		delete(where, "username")
 	}
+	if _, ok := where["name"]; ok {
+		db = db.Where("name like ?", "%"+where["name"].(string)+"%")
+		delete(where, "name")
+	}
 	return db
 }
 

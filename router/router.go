@@ -35,7 +35,7 @@ func RegisterRouter() {
 	at.GET("/hello-info", auth.HelloInfoApi)
 	at.GET("/user-list", auth.UserListApi)
 	at.GET("/user-count", auth.UserCountApi)
-	at.GET("/user-detail", auth.UserDetailApi)
+	at.GET("/user-info", auth.UserInfoApi)
 	at.POST("/user-delete", auth.UserDeleteApi)
 	at.POST("/user-change", auth.UserChangeStatusApi)
 	at.POST("/user-save", auth.UserSaveApi)
@@ -45,7 +45,12 @@ func RegisterRouter() {
 	us.GET("/info", auth.InfoApi)
 
 	// 集群
-	cls := Router.Group("watcher")
+	cls := Router.Group("cluster")
+	cls.GET("/config-list", cluster.ConfigListApi)
+	cls.GET("/config-count", cluster.ConfigCountApi)
+	cls.POST("/config-save", cluster.ConfigSaveApi)
+	cls.GET("/config-info", cluster.ConfigInfoApi)
+
 	// 节点分组
 	node := cls.Group("node")
 	node.GET("/list", cluster.NodeListApi)

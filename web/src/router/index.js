@@ -49,7 +49,7 @@ export const constantRoutes = [
     redirect: '/dashboard',
     children: [{
       path: 'dashboard',
-      name: 'Dashboard',
+      name: '集群管理',
       component: () => import('@/views/dashboard/index'),
       meta: { title: '主页', icon: 'dashboard' }
     }]
@@ -66,7 +66,7 @@ export const constantRoutes = [
         path: 'user-list',
         name: '用户列表',
         component: () => import('@/views/system/user-list'),
-        meta: { title: '用户列表', icon: 'table' }
+        meta: { title: '用户列表', icon: 'el-icon-user-solid\n' }
       },
       {
         path: 'pwd-edit',
@@ -80,6 +80,40 @@ export const constantRoutes = [
         hidden: true,
         component: () => import('@/views/system/user-add'),
         meta: { title: '用户创建', icon: 'tree' }
+      }
+    ]
+  },
+
+  {
+    path: '/cluster',
+    component: Layout,
+    redirect: '/system/user-list',
+    name: 'Cluster',
+    meta: { title: '集群管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'config-add',
+        name: '配置添加',
+        hidden: true,
+        component: () => import('@/views/cluster/config-add'),
+      },
+      {
+        path: 'config-list',
+        name: '配置列表',
+        component: () => import('@/views/cluster/config-list'),
+        meta: { title: '配置列表', icon: 'el-icon-s-management' }
+      },
+      {
+        path: 'node-list',
+        name: '节点列表',
+        component: () => import('@/views/cluster/node-list'),
+        meta: { title: '节点列表', icon: 'el-icon-monitor' }
+      },
+      {
+        path: 'app-list',
+        name: '应用列表',
+        component: () => import('@/views/cluster/app-list'),
+        meta: { title: '应用列表', icon: 'el-icon-takeaway-box' }
       }
     ]
   },

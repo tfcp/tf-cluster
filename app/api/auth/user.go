@@ -81,20 +81,20 @@ func UserCountApi(c *gin.Context) {
 	utils.Response(c, code.ErrSuccess, res)
 }
 
-type RequestUserDetail struct {
+type RequestUserInfo struct {
 	Id int `json:"id" form:"id" valid:"id      @required#id不能为空"`
 }
 
-func UserDetailApi(c *gin.Context) {
-	var reqUserDetail RequestUserDetail
-	c.Bind(&reqUserDetail)
-	if err := gvalid.CheckStruct(c, reqUserDetail, nil); err != nil {
+func UserInfoApi(c *gin.Context) {
+	var reqUserInfo RequestUserInfo
+	c.Bind(&reqUserInfo)
+	if err := gvalid.CheckStruct(c, reqUserInfo, nil); err != nil {
 		utils.Response(c, code.ErrSystem, err.FirstString())
 		return
 	}
 	hs := auth.NewUserService()
 	whereCondition := map[string]interface{}{}
-	whereCondition["id"] = reqUserDetail.Id
+	whereCondition["id"] = reqUserInfo.Id
 	userDetail, err := hs.One(whereCondition)
 	if err != nil {
 		utils.Response(c, code.ErrSystem, err.Error())
@@ -165,7 +165,7 @@ func UserSaveApi(c *gin.Context) {
 	}
 	us := auth.NewUserService()
 	if us.UserExists(reqUserSave.Id, reqUserSave.Name) {
-		utils.Response(c, code.ErrUserExist, nil)
+		utils.Response(c, code.ErrExist, nil)
 		return
 	}
 	err := us.Save(reqUserSave.Id,

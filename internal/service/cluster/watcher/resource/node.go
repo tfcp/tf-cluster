@@ -6,12 +6,14 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/tools/cache"
+	cluster2 "tf-cluster/internal/model/cluster"
 	"tf-cluster/internal/service/cluster/watcher"
 	"tf-cluster/library/log"
 )
 
 type NodeWatcher struct {
 	// model Model
+	nodeModel cluster2.Node
 }
 
 func (this *NodeWatcher) Run() {
@@ -58,5 +60,7 @@ func (this *NodeWatcher) OnUpdate(oldObj, newObj interface{}) {
 func (this *NodeWatcher) OnAdd(obj interface{}) {
 	if node, ok := obj.(*v1.Node); ok {
 		fmt.Println("nodeAdd:", node)
+		newNode := cluster2.Node{}
+		this.nodeModel.CreateNode()
 	}
 }

@@ -4,7 +4,6 @@ import (
 	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"tf-cluster/internal/model"
-	"tf-cluster/library/log"
 )
 
 // gorm文档: https://www.tizi365.com/archives/22.html
@@ -80,6 +79,15 @@ func (this *User) DeleteUser(where map[string]interface{}) error {
 func (this *User) UpdateUser(user User, upMap map[string]interface{}) error {
 	// 更新具体值
 	//err := model.Db.Model(&user).Update(update).Error
+	pwd, ok := upMap["password"]
+	if ok && pwd != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(pwd.(string)), bcrypt.DefaultCost) //密码加密处理
+		if err != nil {
+			return err
+		}
+		upMap["password"] = hash
+	}
+
 	err := model.Db.Model(&user).Update(upMap).Error
 	// 更新模型
 	//err := model.Db.Update(&user).Error
@@ -90,6 +98,13 @@ func (this *User) UpdateUser(user User, upMap map[string]interface{}) error {
 }
 
 func (this *User) CreateUser(user User) error {
+	if user.Pwd != "" {
+		hash, err := bcrypt.GenerateFromPassword([]byte(user.Pwd), bcrypt.DefaultCost) //密码加密处理
+		if err != nil {
+			return err
+		}
+		user.Pwd = string(hash)
+	}
 	err := model.Db.Create(&user).Error
 	if err != nil {
 		return err
@@ -97,33 +112,15 @@ func (this *User) CreateUser(user User) error {
 	return nil
 }
 
-// user数据查询统一处理
 func (this *User) AfterFind() error {
-	//hash, err := bcrypt.GenerateFromPassword([]byte(this.Pwd), bcrypt.DefaultCost) //密码加密处理
-	//if err != nil {
-	//	log.Logger.Errorf("UserModel BeforeSaveError: %v", err)
-	//	return err
-	//}
-	//this.Pwd = string(hash)
 	return nil
 }
 
-func (this *User) BeforeSave() error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(this.Pwd), bcrypt.DefaultCost) //密码加密处理
-	if err != nil {
-		log.Logger.Errorf("UserModel BeforeSaveError: %v", err)
-		return err
-	}
-	this.Pwd = string(hash)
+func (this *User) AfterUpdate(orm *gorm.DB) error {
+	// hook save update复用一个即可
 	return nil
 }
 
 func (this *User) BeforeUpdate() error {
-	hash, err := bcrypt.GenerateFromPassword([]byte(this.Pwd), bcrypt.DefaultCost) //密码加密处理
-	if err != nil {
-		log.Logger.Errorf("UserModel BeforeUpdateError: %v", err)
-		return err
-	}
-	this.Pwd = string(hash)
 	return nil
 }

@@ -52,15 +52,11 @@ func RegisterRouter() {
 	cls.POST("/config-save", cluster.ConfigSaveApi)
 	cls.GET("/config-info", cluster.ConfigInfoApi)
 
-	// 节点列表
+	// 节点分组
 	cls.GET("/node-list", cluster.NodeListApi)
 	cls.GET("/node-count", cluster.NodeCountApi)
 	cls.GET("/node-info", cluster.NodeInfoApi)
 
-	// 节点分组
-	node := cls.Group("node")
-	node.GET("/list", cluster.NodeListApi)
-	node.GET("/info", cluster.NodeInfoApi)
 	// 负载分组
 	deploy := cls.Group("deploy")
 	deploy.GET("/list", cluster.DeployListApi)

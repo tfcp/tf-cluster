@@ -53,11 +53,10 @@ export function getNodeCount(params) {
   })
 }
 
-export function getNodeDetail(params) {
+export function getNodeDetail(id) {
   return request({
-    url: '/cluster/node-info',
+    url: '/cluster/node-info?id=' + id,
     method: 'get',
-    params,
     baseURL: process.env.VUE_APP_URL
   })
 }

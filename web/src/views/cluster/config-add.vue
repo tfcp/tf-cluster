@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import { saveConfig, getDetail } from '@/api/cluster'
+import { saveConfig, getConfigDetail } from '@/api/cluster'
 
 export default {
   data() {
@@ -52,7 +52,7 @@ export default {
   },
   created() {
     if (this.$route.query.id != null) {
-      getDetail(this.$route.query.id).then(response => {
+      getConfigDetail(this.$route.query.id).then(response => {
         const res = response.data.result
         this.form.id = res.id
         this.form.name = res.name

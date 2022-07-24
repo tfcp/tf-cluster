@@ -110,6 +110,12 @@ export const constantRoutes = [
         meta: { title: '节点列表', icon: 'el-icon-monitor' }
       },
       {
+        path: 'node-add',
+        name: '节点详情',
+        hidden: true,
+        component: () => import('@/views/cluster/node-add')
+      },
+      {
         path: 'app-list',
         name: '应用列表',
         component: () => import('@/views/cluster/app-list'),

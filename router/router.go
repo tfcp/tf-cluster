@@ -46,10 +46,16 @@ func RegisterRouter() {
 
 	// 集群
 	cls := Router.Group("cluster")
+	// 集群配置
 	cls.GET("/config-list", cluster.ConfigListApi)
 	cls.GET("/config-count", cluster.ConfigCountApi)
 	cls.POST("/config-save", cluster.ConfigSaveApi)
 	cls.GET("/config-info", cluster.ConfigInfoApi)
+
+	// 节点列表
+	cls.GET("/node-list", cluster.NodeListApi)
+	cls.GET("/node-count", cluster.NodeCountApi)
+	cls.GET("/node-info", cluster.NodeInfoApi)
 
 	// 节点分组
 	node := cls.Group("node")

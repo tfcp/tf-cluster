@@ -3,16 +3,19 @@ package cluster
 import (
 	"github.com/jinzhu/gorm"
 	"tf-cluster/internal/model"
+	"time"
 )
 
 // gorm文档: https://www.tizi365.com/archives/22.html
 
 type Node struct {
 	*model.Model
-	Ip            string `gorm:"column:ip" json:"ip"`
-	Labels        string `json:"labels"`
-	Taints        string `json:"taints"`
-	Unschedulable int    `json:"Unschedulable"`
+	Ip            string    `gorm:"column:ip" json:"ip"`
+	Labels        string    `json:"labels"`
+	Taints        string    `json:"taints"`
+	Unschedulable int       `json:"unschedulable"`
+	Cluster       string    `json:"cluster"`
+	CreateAt      time.Time `gorm:"column:create_at;default:'CURRENT_TIMESTAMP'" json:"create_at"`
 }
 
 //func (this *Node) TableName() string{

@@ -2,10 +2,12 @@ package resource
 
 import (
 	"fmt"
+	"github.com/gogf/gf/util/gconv"
 	v1 "k8s.io/api/core/v1"
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/tools/cache"
+	"tf-cluster/internal/enum"
 	cluster2 "tf-cluster/internal/model/cluster"
 	"tf-cluster/internal/service/cluster/watcher"
 	"tf-cluster/library/log"
@@ -13,7 +15,8 @@ import (
 
 type NodeWatcher struct {
 	// model Model
-	nodeModel cluster2.Node
+	nodeModel   cluster2.Node
+	configModel *cluster2.Config
 }
 
 func (this *NodeWatcher) Run(config *cluster2.Config) {
@@ -22,6 +25,7 @@ func (this *NodeWatcher) Run(config *cluster2.Config) {
 		log.Logger.Errorf("NodeInformerService Run GetInformerFacError: %v", err)
 		return
 	}
+	this.configModel = config
 	nodeInformer := informerFac.Core().V1().Nodes()
 	informer := nodeInformer.Informer()
 	defer runtime.HandleCrash()
@@ -65,11 +69,17 @@ func (this *NodeWatcher) OnUpdate(oldObj, newObj interface{}) {
 
 func (this *NodeWatcher) OnAdd(obj interface{}) {
 	if node, ok := obj.(*v1.Node); ok {
-		fmt.Println("nodeAdd:", node)
+		unschedulable := enum.UnSchedulabledEnable
+		if node.Spec.Unschedulable {
+			unschedulable = enum.UnSchedulabledDisable
+		}
 		newNode := cluster2.Node{
-			Ip: node.Name,
-			//Labels: json.Marshal(node.Labels),
-			//Taints: node.Status,
+			Ip:            node.Name,
+			Labels:        gconv.String(node.Labels),
+			Taints:        gconv.String(node.Spec.Taints),
+			Unschedulable: unschedulable,
+			Cluster:       this.configModel.Name,
+			CreateAt:      node.CreationTimestamp.Time,
 		}
 		if err := this.nodeModel.CreateNode(newNode); err != nil {
 			log.Logger.Errorf("NodeWatcher OnAdd CreateNodeError: %v", err)

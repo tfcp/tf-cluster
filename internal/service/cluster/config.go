@@ -18,7 +18,7 @@ func NewConfigService() (s *ConfigService) {
 func (this *ConfigService) List(where map[string]interface{}, page, size int) ([]*cluster.Config, error) {
 	list, err := this.configModel.ListConfig(where, page, size)
 	if err != nil {
-		log.Logger.Errorf("UserService ListError: %v", err)
+		log.Logger.Errorf("ConfigService ListError: %v", err)
 		return nil, err
 	}
 	return list, nil

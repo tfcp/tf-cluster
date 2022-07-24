@@ -27,10 +27,37 @@ export function saveConfig(params) {
   })
 }
 
-export function getDetail(id) {
+export function getConfigDetail(id) {
   return request({
     url: '/cluster/config-info?id=' + id,
     method: 'get',
+    baseURL: process.env.VUE_APP_URL
+  })
+}
+
+export function getNodeList(params) {
+  return request({
+    url: '/cluster/node-list',
+    method: 'get',
+    params,
+    baseURL: process.env.VUE_APP_URL
+  })
+}
+
+export function getNodeCount(params) {
+  return request({
+    url: '/cluster/node-count',
+    method: 'get',
+    params,
+    baseURL: process.env.VUE_APP_URL
+  })
+}
+
+export function getNodeDetail(params) {
+  return request({
+    url: '/cluster/node-info',
+    method: 'get',
+    params,
     baseURL: process.env.VUE_APP_URL
   })
 }

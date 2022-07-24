@@ -25,7 +25,7 @@ func (this *PodWatcher) Run(config *cluster2.Config) {
 	stopper := make(chan struct{})
 	defer close(stopper)
 	// 启动 informer，list & watch
-	go cluster.InformerFac.Start(stopper)
+	go informerFac.Start(stopper)
 
 	// 等待 Cache 都同步完毕,必不可少
 	if !cache.WaitForCacheSync(stopper, informer.HasSynced) {

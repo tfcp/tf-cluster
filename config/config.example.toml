@@ -34,7 +34,8 @@
         name        = "demo"
         type        = "mysql"
         tabel       = "hello"
-
+[kube]
+    configPath = "./config/"
 [mq]
     [mq.kafka]
         addr = ["127.0.0.1:9092"]

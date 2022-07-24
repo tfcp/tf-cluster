@@ -25,3 +25,4 @@ tools/ormgen/model/*
 internal/test/*/logs/*
 sre-server
 sre-process
+config/*-config

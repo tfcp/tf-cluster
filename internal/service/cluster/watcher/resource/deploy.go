@@ -5,6 +5,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/tools/cache"
+	cluster2 "tf-cluster/internal/model/cluster"
 	cluster "tf-cluster/internal/service/cluster/watcher"
 	"tf-cluster/library/log"
 )
@@ -12,8 +13,13 @@ import (
 type DeployWatcher struct {
 }
 
-func (this *DeployWatcher) Run() {
-	deployInformer := cluster.InformerFac.Apps().V1().Deployments()
+func (this *DeployWatcher) Run(config *cluster2.Config) {
+	informerFac, err := cluster.GetInformerFac(config.Config, config.ID)
+	if err != nil {
+		log.Logger.Errorf("DeployInformerService Run GetInformerFacError: %v", err)
+		return
+	}
+	deployInformer := informerFac.Apps().V1().Deployments()
 	informer := deployInformer.Informer()
 	defer runtime.HandleCrash()
 	stopper := make(chan struct{})
@@ -35,7 +41,7 @@ func (this *DeployWatcher) Run() {
 	deployLister := deployInformer.Lister()
 
 	// 从 lister 中获取所有 items
-	_, err := deployLister.List(labels.Everything())
+	_, err = deployLister.List(labels.Everything())
 	if err != nil {
 		log.Logger.Errorf("DeployInformerService Run Lister ListError: %v", err)
 	}

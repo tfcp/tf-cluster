@@ -12,6 +12,7 @@ require (
 	github.com/fatih/color v1.13.0 // indirect
 	github.com/fsnotify/fsnotify v1.5.1 // indirect
 	github.com/fvbock/endless v0.0.0-20170109170031-447134032cb6
+	github.com/ghodss/yaml v1.0.0
 	github.com/gin-contrib/pprof v1.3.0
 	github.com/gin-gonic/gin v1.7.7
 	github.com/go-openapi/spec v0.20.5 // indirect
@@ -33,7 +34,6 @@ require (
 	github.com/mattn/go-sqlite3 v1.11.0 // indirect
 	github.com/olekukonko/tablewriter v0.0.5
 	github.com/pkg/errors v0.9.1
-	github.com/spf13/pflag v1.0.5 // indirect
 	github.com/swaggo/files v0.0.0-20210815190702-a29dd2bc99b2
 	github.com/swaggo/gin-swagger v1.2.0
 	github.com/swaggo/swag v1.8.1
@@ -45,7 +45,7 @@ require (
 	golang.org/x/tools v0.1.10 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.27.1 // indirect
-	k8s.io/api v0.0.0-20190620084959-7cf5895f2711
-	k8s.io/apimachinery v0.0.0-20190612205821-1799e75a0719
-	k8s.io/client-go v12.0.0+incompatible
+	k8s.io/api v0.19.0
+	k8s.io/apimachinery v0.19.0
+	k8s.io/client-go v0.19.0
 )

@@ -5,6 +5,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/tools/cache"
+	cluster2 "tf-cluster/internal/model/cluster"
 	cluster "tf-cluster/internal/service/cluster/watcher"
 	"tf-cluster/library/log"
 )
@@ -12,8 +13,13 @@ import (
 type PodWatcher struct {
 }
 
-func (this *PodWatcher) Run() {
-	podInformer := cluster.InformerFac.Core().V1().Pods()
+func (this *PodWatcher) Run(config *cluster2.Config) {
+	informerFac, err := cluster.GetInformerFac(config.Config, config.ID)
+	if err != nil {
+		log.Logger.Errorf("PodInformerService Run GetInformerFacError: %v", err)
+		return
+	}
+	podInformer := informerFac.Core().V1().Pods()
 	informer := podInformer.Informer()
 	defer runtime.HandleCrash()
 	stopper := make(chan struct{})
@@ -35,7 +41,7 @@ func (this *PodWatcher) Run() {
 	podLister := podInformer.Lister()
 
 	// 从 lister 中获取所有 items
-	_, err := podLister.List(labels.Everything())
+	_, err = podLister.List(labels.Everything())
 	if err != nil {
 		log.Logger.Errorf("podInformerService Run Lister ListError: %v", err)
 	}

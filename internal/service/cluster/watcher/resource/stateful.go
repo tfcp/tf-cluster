@@ -5,6 +5,7 @@ import (
 	"k8s.io/apimachinery/pkg/labels"
 	"k8s.io/apimachinery/pkg/util/runtime"
 	"k8s.io/client-go/tools/cache"
+	cluster2 "tf-cluster/internal/model/cluster"
 	cluster "tf-cluster/internal/service/cluster/watcher"
 	"tf-cluster/library/log"
 )
@@ -12,8 +13,13 @@ import (
 type StatefulWatcher struct {
 }
 
-func (this *StatefulWatcher) Run() {
-	statefulInformer := cluster.InformerFac.Apps().V1().StatefulSets()
+func (this *StatefulWatcher) Run(config *cluster2.Config) {
+	informerFac, err := cluster.GetInformerFac(config.Config, config.ID)
+	if err != nil {
+		log.Logger.Errorf("StatefulInformerService Run GetInformerFacError: %v", err)
+		return
+	}
+	statefulInformer := informerFac.Apps().V1().StatefulSets()
 	informer := statefulInformer.Informer()
 	defer runtime.HandleCrash()
 	stopper := make(chan struct{})
@@ -26,7 +32,7 @@ func (this *StatefulWatcher) Run() {
 		runtime.HandleError(fmt.Errorf("Timed out waiting for caches to sync"))
 		return
 	}
-	log.Logger.Info("deploy informer start")
+	log.Logger.Info("stateful informer start")
 	// 使用自定义 handler
 	informer.AddEventHandler(
 		this,
@@ -35,7 +41,7 @@ func (this *StatefulWatcher) Run() {
 	statefulLister := statefulInformer.Lister()
 
 	// 从 lister 中获取所有 items
-	_, err := statefulLister.List(labels.Everything())
+	_, err = statefulLister.List(labels.Everything())
 	if err != nil {
 		log.Logger.Errorf("StatefulInformerService Run Lister ListError: %v", err)
 	}

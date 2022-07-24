@@ -88,3 +88,4 @@ vue项目npm run dev
 4. Devops 
 5. k8s集群资源管理
 6. operator开发(informer)
+   (yaml转json https://www.dute.org/yaml)

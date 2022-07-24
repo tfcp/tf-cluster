@@ -16,8 +16,13 @@ type NodeWatcher struct {
 	nodeModel cluster2.Node
 }
 
-func (this *NodeWatcher) Run() {
-	nodeInformer := cluster.InformerFac.Core().V1().Nodes()
+func (this *NodeWatcher) Run(config *cluster2.Config) {
+	informerFac, err := cluster.GetInformerFac(config.Config, config.ID)
+	if err != nil {
+		log.Logger.Errorf("NodeInformerService Run GetInformerFacError: %v", err)
+		return
+	}
+	nodeInformer := informerFac.Core().V1().Nodes()
 	informer := nodeInformer.Informer()
 	defer runtime.HandleCrash()
 	stopper := make(chan struct{})
@@ -39,7 +44,7 @@ func (this *NodeWatcher) Run() {
 	nodeLister := nodeInformer.Lister()
 
 	// 从 lister 中获取所有 items
-	_, err := nodeLister.List(labels.Everything())
+	_, err = nodeLister.List(labels.Everything())
 	if err != nil {
 		log.Logger.Errorf("NodeInformerService Run Lister ListError: %v", err)
 	}
@@ -60,7 +65,13 @@ func (this *NodeWatcher) OnUpdate(oldObj, newObj interface{}) {
 func (this *NodeWatcher) OnAdd(obj interface{}) {
 	if node, ok := obj.(*v1.Node); ok {
 		fmt.Println("nodeAdd:", node)
-		newNode := cluster2.Node{}
-		this.nodeModel.CreateNode()
+		newNode := cluster2.Node{
+			Ip: node.Name,
+			//Labels: node.Labels,
+			//Taints: node.Status,
+		}
+		if err := this.nodeModel.CreateNode(newNode); err != nil {
+			log.Logger.Errorf("NodeWatcher OnAdd CreateNodeError: %v", err)
+		}
 	}
 }

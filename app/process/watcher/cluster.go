@@ -15,6 +15,9 @@ func WatchCluster() {
 	//&resource.DeployWatcher{},
 	//&resource.ServiceWatcher{},
 	)
+	if err := clusters.Listen(); err != nil {
+		log.Logger.Errorf("watchCluster error:%v", err)
+		return
+	}
 	log.Logger.Infof("watchCluster start...")
-	clusters.Listen()
 }
